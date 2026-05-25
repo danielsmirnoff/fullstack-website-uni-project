@@ -1,0 +1,77 @@
+<!-- This is the home page template for the marketplace app. 
+ It displays a welcome message, categories, listings. 
+ The template uses Tailwind CSS for styling and is designed 
+ to be responsive and user-friendly.
+Created by Subreet Singh on 04-09-2026
+-->
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Alli-Trade{% endblock %}
+
+{% block content %}
+<main class="mx-auto max-w-7xl px-6 py-10">
+  <section class="mb-10 overflow-hidden rounded-3xl border border-violet-100 bg-violet-50 p-8 shadow-sm">
+    <div class="max-w-3xl">
+      <p class="mb-3 text-sm font-semibold uppercase tracking-wide text-violet-700">
+        SFSU Student Marketplace
+      </p>
+
+      <h1 class="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
+        Buy, sell, and connect with the SFSU community
+      </h1>
+
+      <p class="mt-4 text-lg text-slate-600">
+        A trusted campus marketplace for second-hand finds, student services, and everyday deals — all in one place.
+      </p>
+
+      <div class="mt-6 flex flex-wrap gap-3">
+        <a href="{% url 'search_results' %}" class="rounded-full bg-violet-600 px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-violet-700">
+          Browse Listings
+        </a>
+        <a href="{% url 'create_listing' %}" class="rounded-full border border-violet-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 hover:bg-violet-100">
+          Create Listing
+        </a>
+      </div>
+
+      <p class="mt-4 text-sm text-slate-700">
+        Built for verified SFSU students and campus users.
+      </p>
+    </div>
+  </section>
+
+  <section class="mb-12 rounded-3xl border bg-white p-6 shadow-sm">
+    <div class="mb-5 flex items-center justify-between">
+      <h2 class="text-2xl font-bold tracking-tight">Recently Added</h2>
+      <a href="{% url 'search_results' %}" class="text-sm font-semibold text-violet-700 hover:text-violet-900">
+        View all listings
+      </a>
+    </div>
+
+    <div class="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+      {% for listing in recent_listings %}
+        {% include "marketplace/partials/listing_tile.html" with listing=listing %}
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="mb-12 rounded-3xl border bg-white p-6 shadow-sm">
+    <div class="mb-5 flex items-center justify-between">
+      <h2 class="text-2xl font-bold tracking-tight">Popular Services</h2>
+      <a href="{% url 'search_results' %}?type=service" class="text-sm font-semibold text-violet-700 hover:text-violet-900">
+        View all services
+      </a>
+    </div>
+
+  <div class="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+    {% for listing in popular_services %}
+      {% include "marketplace/partials/listing_tile.html" with listing=listing %}
+    {% empty %}
+      <p class="text-slate-600">No popular services available yet.</p>
+    {% endfor %}
+  </div>
+</section>
+
+</main>
+{% endblock %}

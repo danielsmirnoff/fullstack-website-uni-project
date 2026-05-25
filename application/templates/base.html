@@ -1,0 +1,234 @@
+<!-- base.html 
+ This is the base template for the "marketplace" app. It defines the overall HTML structure and includes blocks for the title and content that can be overridden by child templates.
+ Created by Subreet Singh on 04-09-2026 
+-->
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-869NESK34J"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-869NESK34J');
+    </script>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>{% block title %}Alli-Trade{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="min-h-screen bg-slate-100 text-slate-900">
+    {% block header %}
+    <header class="sticky top-0 z-30 border-b bg-white">
+      <div class="bg-yellow-200 py-2 text-center text-xs font-semibold">
+        SFSU Software Engineering Project CSC 648-848, Spring 2026. For Demonstration Only
+      </div>
+
+      <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-2 px-3 py-3 md:flex-nowrap md:gap-4 md:px-6 md:py-4">
+        <div class="flex w-full items-center gap-2 md:hidden">
+          <a href="{% url 'marketplace_home' %}" class="flex shrink-0 items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="100 -50 200 300" role="img" aria-label="Minimal Egyptian plover head silhouette" class="h-8 w-auto text-violet-600" fill="none">
+              <title>Minimal Egyptian Plover Head</title>
+              <g fill="currentColor">
+                <circle cx="180" cy="100" r="48" />
+                <polygon points="220,92 340,110 220,128" />
+                <polygon points="140,120 200,140 160,170 110,150" />
+              </g>
+            </svg>
+            <span class="ml-1 whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-900">
+              ALLI-TRADE
+            </span>
+          </a>
+
+          <form method="GET" action="{% url 'search_results' %}" class="min-w-0 flex-1">
+            <div class="flex items-center rounded-full border bg-slate-50 px-3 py-2">
+              <label for="mobile-search" class="sr-only">
+                Search
+              </label>
+              <input
+                type="text"
+                name="q"
+                id="mobile-search"
+                placeholder="Search products & services"
+                value="{{ query }}"
+                class="min-w-0 w-full bg-transparent text-sm outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-50"
+              />
+              <button type="submit" class="ml-2 shrink-0 border-l border-slate-300 pl-3 text-slate-700 hover:text-slate-900" aria-label="Search">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <circle cx="11" cy="11" r="7" />
+                  <path d="m20 20-3.5-3.5" />
+                </svg>
+              </button>
+            </div>
+          </form>
+
+          <details class="relative shrink-0">
+            <summary class="flex h-10 w-10 cursor-pointer list-none items-center justify-center rounded-full border text-slate-700 hover:bg-slate-100">
+              <span class="sr-only">Open menu</span>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M3 6h18" />
+                <path d="M3 12h18" />
+                <path d="M3 18h18" />
+              </svg>
+            </summary>
+
+            <div class="absolute right-0 top-full z-40 mt-2 w-44 rounded-xl border bg-white p-2 shadow-lg">
+              {% if request.user.is_authenticated %}
+                <a href="{% url 'account' %}" class="flex items-center justify-between gap-2 rounded-lg px-3 py-2 text-sm hover:bg-slate-100">
+                  <span class="flex items-center gap-2">
+                    Account
+                  </span>
+                </a>
+                <a href="{% url 'chat' %}" class="flex items-center justify-between gap-2 rounded-lg px-3 py-2 text-sm hover:bg-slate-100">
+                  <span>Messages</span>
+                  {% if unread_count %}
+                    <span class="inline-flex min-w-5 items-center justify-center rounded-full bg-violet-600 px-1.5 py-0.5 text-[11px] font-semibold leading-none text-white">
+                      {% if unread_count > 99 %}99+{% else %}{{ unread_count }}{% endif %}
+                    </span>
+                  {% endif %}
+                </a>
+                <a href="{% url 'logout' %}" class="block rounded-lg px-3 py-2 text-sm hover:bg-slate-100">Log out</a>
+              {% else %}
+              <a href="{% url 'create_listing' %}" class="block rounded-lg px-3 py-2 text-sm font-medium hover:bg-slate-100">Create Listing</a>
+              <a href="{% url 'register' %}" class="block rounded-lg px-3 py-2 text-sm font-medium hover:bg-slate-100">Sign Up</a>
+              <a href="{% url 'login' %}" class="block rounded-lg px-3 py-2 text-sm font-medium hover:bg-slate-100">Login</a>
+              {% endif %}
+            </div>
+          </details>
+        </div>
+
+        <div class="hidden items-center gap-8 md:flex">
+          <a href="{% url 'marketplace_home' %}" class="flex items-center">
+            <span>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="100 -50 200 300" role="img" aria-label="Minimal Egyptian plover head silhouette" class="h-10 w-auto text-violet-600" fill="none">
+                <title>Egyptian Plover Bird</title>
+                <g fill="currentColor">
+                  <circle cx="180" cy="100" r="48" />
+                  <polygon points="220,92 340,110 220,128" />
+                  <polygon points="140,120 200,140 160,170 110,150" />
+                </g>
+              </svg>
+            </span>
+            <span class="hidden md:block">
+              <span class="block text-2xl font-bold tracking-tight text-slate-900">Alli-Trade</span>
+              <span class="block text-xs font-medium uppercase tracking-[0.10em] text-violet-700">Student-powered SFSU marketplace</span>
+            </span>
+          </a>
+        </div>
+
+        <div class="hidden md:flex md:flex-1 md:justify-center">
+          <form method="GET" action="{% url 'search_results' %}" class="w-full max-w-xl">
+            <div class="flex items-center rounded-full border bg-slate-50 px-4 py-2">
+              <label for="desktop-search" class="sr-only">
+                Search
+              </label>
+              <input
+                type="text"
+                name="q"
+                id="desktop-search"
+                placeholder="Search for products or services"
+                value="{{ query }}"
+                class="w-full bg-transparent text-sm outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-50"
+              />
+              <button type="submit" class="ml-3 border-l border-slate-300 pl-3 text-slate-700 hover:text-slate-900" aria-label="Search">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <circle cx="11" cy="11" r="7" />
+                  <path d="m20 20-3.5-3.5" />
+                </svg>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <div class="hidden items-center gap-6 md:flex">
+          <div class="relative group">
+            <button class="flex items-center gap-1 text-sm font-medium hover:text-slate-600">
+              Browse
+              <span class="text-xs">▼</span>
+            </button>
+
+            <div class="absolute left-0 top-full z-40 hidden w-56 pt-2 group-hover:block">
+              <div class="rounded-xl border bg-white p-2 shadow-lg">
+                {% for category in categories %}
+                  <a href="{% url 'category_listings' category.category_id %}" class="block rounded-lg px-3 py-2 text-sm hover:bg-slate-100">
+                    {{ category.category_name }}
+                  </a>
+                {% endfor %}
+                <div class="my-2 border-t"></div>
+                <a href="{% url 'search_results' %}" class="block rounded-lg px-3 py-2 text-sm font-medium hover:bg-slate-100">
+                  View all listings
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {% if request.user.is_authenticated %}
+            <div class="hidden items-center gap-6 md:flex">
+              <div class="relative group">
+
+                <a class="relative flex items-center gap-1 text-sm font-medium hover:text-slate-600" href="{% url 'account' %}">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                  <path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0 0 21.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 0 0 3.065 7.097A9.716 9.716 0 0 0 12 21.75a9.716 9.716 0 0 0 6.685-2.653Zm-12.54-1.285A7.486 7.486 0 0 1 12 15a7.486 7.486 0 0 1 5.855 2.812A8.224 8.224 0 0 1 12 20.25a8.224 8.224 0 0 1-5.855-2.438ZM15.75 9a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" clip-rule="evenodd" />
+                  </svg>
+                </a>
+
+                <div class="absolute left-1/2 top-full z-40 hidden w-56 -translate-x-1/2 pt-2 group-hover:block">
+                  <div class="rounded-xl border bg-white p-2 shadow-lg">
+                    <a href="{% url 'account' %}" class="block rounded-lg px-3 py-2 mt-2 text-sm hover:bg-slate-100">Listings</a>
+                    <a href="{% url 'chat' %}" class="flex items-center justify-between gap-2 rounded-lg px-3 py-2 mt-2 text-sm hover:bg-slate-100">
+                      <span>Messages</span>
+                      {% if unread_count %}
+                        <span class="inline-flex min-w-5 items-center justify-center rounded-full bg-violet-600 px-1.5 py-0.5 text-[11px] font-semibold leading-none text-white">
+                          {% if unread_count > 99 %}99+{% else %}{{ unread_count }}{% endif %}
+                        </span>
+                      {% endif %}
+                    </a>
+                    <a href="{% url 'logout' %}" class="flex w-full items-center justify-center rounded-lg px-4 py-2.5 mt-5 text-sm font-semibold hover:bg-slate-100 border border-red-500 bg-red-50 text-red-800 transition hover:bg-red-100">
+                      <svg class="h-5 w-5 pr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                      </svg>
+                      Log out
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% else %}
+            <a href="{% url 'login' %}" class="text-sm font-medium hover:text-slate-600">Login</a>
+            <a href="{% url 'register' %}" class="text-sm font-medium hover:text-slate-600">Sign Up</a>
+          {% endif %}
+        </div>
+      </div>
+    </header>
+    {% endblock %}
+    
+    {% if messages %}
+    <div class="mx-auto max-w-7xl px-6 py-4">
+      {% for message in messages %}
+        <div class="rounded-lg border px-4 py-3 {% if message.tags == 'error' %}border-red-300 bg-red-50 text-red-800{% elif message.tags == 'success' %}border-green-300 bg-green-50 text-green-800{% elif message.tags == 'warning' %}border-amber-300 bg-amber-50 text-amber-800{% else %}border-blue-300 bg-blue-50 text-blue-800{% endif %}" role="alert">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    
+    {% block content %}{% endblock %}
+
+    {% block footer %}
+    <footer class="border-t bg-white">
+      <div class="mx-auto flex max-w-7xl flex-col gap-4 px-6 py-8 text-sm text-slate-600 sm:flex-row sm:items-center sm:justify-between">
+        <p class="font-medium text-slate-700">© {% now "Y" %} Alli-Trade · Built for the SFSU community</p>
+        <nav class="flex flex-wrap gap-4">
+          <a href="{% url 'marketplace_home' %}" class="hover:text-slate-900">Home</a>
+          <a href="{% url 'search_results' %}" class="hover:text-slate-900">Browse</a>
+          <a href="{% url 'about' %}" class="hover:text-slate-900">About</a>
+        </nav>
+      </div>
+    </footer>
+    {% endblock %}
+  </body>
+</html>

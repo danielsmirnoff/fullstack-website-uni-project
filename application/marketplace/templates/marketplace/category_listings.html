@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ selected_category.category_name }} | Alli-Trade{% endblock %}
+
+{% block content %}
+<main class="mx-auto max-w-7xl px-6 py-10">
+  <section class="mb-10 rounded-3xl bg-white p-8 shadow-sm">
+    <div class="max-w-3xl">
+      <p class="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
+        Category
+      </p>
+      <h1 class="text-4xl font-bold tracking-tight sm:text-5xl">{{ selected_category.category_name }}</h1>
+      {% if selected_category.category_description %}
+        <p class="mt-4 text-lg text-slate-600">{{ selected_category.category_description }}</p>
+      {% endif %}
+      <p class="mt-4 text-sm text-slate-500">{{ results_count }} listing{% if results_count != 1 %}s{% endif %}</p>
+    </div>
+  </section>
+
+  <section class="mb-12">
+    <div class="mb-5 flex items-center justify-between">
+      <h2 class="text-2xl font-bold tracking-tight">Listings</h2>
+      <a href="{% url 'search_results' %}?categories={{ selected_category.category_id }}" class="text-sm font-semibold text-slate-600 hover:text-slate-900">
+        Open In Search
+      </a>
+    </div>
+
+    {% if listings %}
+      <div class="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+        {% for listing in listings %}
+          {% include "marketplace/partials/listing_tile.html" with listing=listing %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="flex min-h-[220px] items-center justify-center rounded-xl border border-dashed p-10 text-slate-600">
+        <div class="text-center">
+          <p class="text-base font-semibold text-slate-800">No listings yet in this category.</p>
+          <p class="mt-2 text-sm">Try checking other categories from the menu above.</p>
+        </div>
+      </div>
+    {% endif %}
+  </section>
+</main>
+{% endblock %}
